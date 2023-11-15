@@ -4,19 +4,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const configuration = require("./utils/configurations")
+const sequelize = require('./dataAccess/sequalize')
 
+const { Sequelize } = require('sequelize');
 const app = express();
-
-global.isDev = true;
 
 //#region Data base
 mongoose.Promise = global.Promise;
 mongoose
   .connect(configuration.getKey('MONGO_SERVER'), {
-    // useNewUrlParser: true,
     dbName: configuration.getKey("MONGO_DB"),
-    // useUnifiedTopology: true,
-    // useFindAndModify: false
   })
   .then(db => {
     console.log("Base de datos conectada");
@@ -46,7 +43,9 @@ app.use(require("./routes/configRoute"));
 app.use(require("./handlers/pathErrorHandelr"));
 
 //#region start the server
-app.listen(app.get("port"), () => {
-  console.log(`SERVER iniciado en el puerto ${app.get("port")}`);
+sequelize.sync().then(() => {
+  app.listen(app.get("port"), () => {
+    console.log(`SERVER iniciado en el puerto ${app.get("port")}`);
+  });
 });
 //#endregion

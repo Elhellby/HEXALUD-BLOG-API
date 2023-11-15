@@ -1,26 +1,29 @@
-const mongoose = require("mongoose");
-const crypto = require("../utils/crypto")
-const Schema = mongoose.Schema;
+const { DataTypes } = require('sequelize');
+const sequelize = require('../dataAccess/sequalize');
 
-const _nameModel = "blogs";
-
-const userSchema = new Schema({
+const Post = sequelize.define('Post', {
   id: {
-    type: Number
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement:true
   },
   title: {
-    type: String
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   author: {
-    type: String
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   content: {
-    type: String
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   creation_date: {
-    type: Date,
-    default: new Date()
-  }
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
 });
 
-module.exports = mongoose.model(_nameModel, userSchema);
+module.exports = Post;
